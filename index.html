@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Samsepi0lDev - Links</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"> 
+</head>
+<body>
+  <div class="container">
+    <div class="profile">
+      <img data-js="profile-image" src="" alt="">
+      <div class="profile-info">
+        <span data-js="profile-name">any_name</span>
+        <span data-js="profile-id">@any_profile</span>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a target="_blank" href="https://www.youtube.com/channel/UCzqqAkZrSEdKib2AAdOT3fg">
+        🎬 youtube
+      </a>
+      <a target="_blank" href="https://www.instagram.com/eliveltonjps">
+        📷 inistagram
+      </a>
+      <a target="_blank" href="https://www.facebook.com/eliveltonjps">
+        💻 facebook
+      </a>
+      <a target="_blank" href="https://www.github.com/samsepi0ldev">
+        🐱 github
+      </a>
+    </nav>
+    <span class="footer-text">Feito com ❤️ por Elivelton S.</span>
+  </div>
+
+  <script>
+    const url = 'https://api.github.com/users/samsepi0ldev'
+
+    const getDataProfile = async () => {
+      const response = await fetch(url)
+      const { name, login, avatar_url } = await response.json()
+      const imgElm = document.querySelector('[data-js="profile-image"]')
+      const nameElm = document.querySelector('[data-js="profile-name"]')
+      const profileId = document.querySelector('[data-js="profile-id"]')
+
+      imgElm.src = avatar_url
+      nameElm.innerHTML = name
+      profileId.innerHTML = `@${login}`
+    }
+
+    getDataProfile()
+  </script>
+</body>
+</html>
