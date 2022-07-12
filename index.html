@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet"> 
 </head>
 <body>
   <div class="container">
@@ -38,13 +39,13 @@
 
   <script>
     const url = 'https://api.github.com/users/samsepi0ldev'
+    const imgElm = document.querySelector('[data-js="profile-image"]')
+    const nameElm = document.querySelector('[data-js="profile-name"]')
+    const profileId = document.querySelector('[data-js="profile-id"]')
 
-    const getDataProfile = async () => {
+    async function getDataProfile () {
       const response = await fetch(url)
       const { name, login, avatar_url } = await response.json()
-      const imgElm = document.querySelector('[data-js="profile-image"]')
-      const nameElm = document.querySelector('[data-js="profile-name"]')
-      const profileId = document.querySelector('[data-js="profile-id"]')
 
       imgElm.src = avatar_url
       nameElm.innerHTML = name
@@ -52,6 +53,81 @@
     }
 
     getDataProfile()
+
+    const screenDate = {
+      w: window.innerWidth,
+      h: window.innerHeight
+    }
+
+
+    function random (max) {
+      return Math.floor(Math.random() * (max - 1) + 1)
+    }
+
+    function getPositionRandom () {
+      return {
+        y: random(screenDate.h),
+        x: random(screenDate.w)
+      }
+    }
+
+    function createElement (elm, attrs = []) {
+      const el = document.createElement(elm)
+      Object.entries(attrs).forEach(([key, value]) => {
+        el.setAttribute(key, value)
+      })
+      return el
+    }
+
+    function setAnimation (elm) {
+      return elm.animate([
+        { opacity: '100' },
+        { opacity: '0' }
+      ], {
+        duration: 1000,
+        fill: 'forwards',
+        delay: 3000
+      })
+    }
+
+    function getPosPercent (initValue, total) {
+      return Math.floor((initValue * 100) / total)
+    }
+
+    function start () {
+      let value = 0
+      const time = setInterval(() => {
+        const percentValue = value <= 0 ? 1 : value
+        const pos = getPositionRandom()
+        const percent = createElement('span', { class: 'percent' })
+        percent.innerHTML = `${percentValue}%`
+        percent.style.left = `${getPosPercent(pos.x, screenDate.w)}%`
+        percent.style.top = `${getPosPercent(pos.y, screenDate.h)}%`
+        percent.style.transform = 
+          `translate(-${getPosPercent(pos.x, screenDate.w)}%, -${getPosPercent(pos.y, screenDate.h)}%)`
+        const percentElm = setAnimation(percent)
+        percentElm.onfinish = () => percent.remove()
+        document.body.append(percent)
+        if (value > 90) {
+          percentElm.pause()
+          setTimeout(() => {
+            percent.style.transform = 'scale(100)'
+            percent.style.left = '50%'
+            percent.style.top = '50%'
+            percent.innerHTML = ''
+            imgElm.style.boxShadow = '0 0 0 0'
+            imgElm.style.position = 'absolute'
+            imgElm.style.top = '50%'
+            imgElm.style.transform = 'translateY(-50%)'
+          }, 2000)
+          clearInterval(time)
+        }
+        value += 10
+      }, 4000)
+    }
+
+    start()
+
   </script>
 </body>
 </html>
